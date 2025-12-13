@@ -22,7 +22,9 @@ import {
   createZodiacMatcher,
   findAllZodiacInText,
   findFirstZodiacInText,
+  getZodiacDateRange,
   getZodiacSign,
+  getZodiacSignFromDate,
   getSupportedLocales,
   ZodiacSign,
 } from "zodiac-mapper";
@@ -50,6 +52,14 @@ const locales = getSupportedLocales();
 // 4) Reuse a matcher with fixed options (saves repeated option passing)
 const ptOnly = createZodiacMatcher({ includeLocales: ["pt"] });
 ptOnly.getZodiacSign("Áries") === ZodiacSign.ARIES;
+
+// 5) Date helpers (tropical / Western zodiac)
+getZodiacDateRange(ZodiacSign.ARIES);
+// => { start: { month: 3, day: 21 }, end: { month: 4, day: 19 }, crossesYear: false }
+
+getZodiacSignFromDate({ month: 3, day: 21 }) === ZodiacSign.ARIES;
+getZodiacSignFromDate("2000-03-21") === ZodiacSign.ARIES;
+getZodiacSignFromDate("03-21") === ZodiacSign.ARIES;
 ```
 
 ### Locale Filtering (include / exclude)

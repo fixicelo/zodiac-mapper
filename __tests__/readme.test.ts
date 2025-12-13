@@ -4,7 +4,9 @@ import {
   findAllZodiacInText,
   findFirstZodiacInText,
   getSupportedLocales,
+  getZodiacDateRange,
   getZodiacSign,
+  getZodiacSignFromDate,
   ZodiacSign,
 } from "../src/index";
 
@@ -29,6 +31,16 @@ describe("README examples", () => {
     // Reuse a matcher with fixed options (saves repeated option passing)
     const ptOnly = createZodiacMatcher({ includeLocales: ["pt"] });
     expect(ptOnly.getZodiacSign("Áries")).toBe(ZodiacSign.ARIES);
+
+    // Date helpers (tropical / Western zodiac)
+    expect(getZodiacDateRange(ZodiacSign.ARIES)).toEqual({
+      start: { month: 3, day: 21 },
+      end: { month: 4, day: 19 },
+      crossesYear: false,
+    });
+    expect(getZodiacSignFromDate({ month: 3, day: 21 })).toBe(ZodiacSign.ARIES);
+    expect(getZodiacSignFromDate("2000-03-21")).toBe(ZodiacSign.ARIES);
+    expect(getZodiacSignFromDate("03-21")).toBe(ZodiacSign.ARIES);
   });
 
   it("Locale filtering snippet stays correct", () => {

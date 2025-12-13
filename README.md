@@ -1,4 +1,8 @@
 # zodiac-mapper
+
+[![npm version](https://img.shields.io/npm/v/zodiac-mapper.svg)](https://www.npmjs.com/package/zodiac-mapper)
+[![License](https://img.shields.io/npm/l/zodiac-mapper.svg)](https://github.com/fixicelo/zodiac-mapper/blob/main/LICENSE)
+
 A lightweight, zero-dependency TypeScript NPM package that maps **zodiac sign names in dozens of languages and regional variants** to a standardized `ZodiacSign` enum.
 
 Perfect for internationalized astrology apps, horoscope tools, multilingual chatbots, or any project needing robust zodiac name recognition.
@@ -6,6 +10,19 @@ Perfect for internationalized astrology apps, horoscope tools, multilingual chat
 Supports **50+ locales** including English, Chinese, Japanese, German, French, Spanish, Arabic, Persian, Russian, Greek, Hebrew, and more.
 
 Data note: the built-in locale alias dataset was generated and curated with AI assistance. While we try to keep it accurate and conventional, it may contain mistakes or regional variations—please open an issue/PR if you spot a problem.
+
+## Installation
+
+```bash
+# npm
+npm install zodiac-mapper
+
+# pnpm
+pnpm add zodiac-mapper
+
+# yarn
+yarn add zodiac-mapper
+```
 
 ## Features
 

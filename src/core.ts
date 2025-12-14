@@ -200,6 +200,28 @@ export function findAllZodiacInText(
   return findZodiacMatchesInText(text, options);
 }
 
+/**
+ * Returns the list of names/aliases for a given zodiac sign in a specific locale.
+ * @param sign The zodiac sign.
+ * @param locale The locale code (e.g. "en", "zh", "es").
+ * @returns An array of names, or empty array if locale/sign not found.
+ */
+export function getZodiacNames(sign: ZodiacSign, locale: string): string[] {
+  const canonical = canonicalizeLocale(locale);
+  const base = getBaseLanguage(locale);
+
+  // Try exact match (canonical)
+  if (ZODIAC_PER_LOCALE[canonical]?.[sign]) {
+    return ZODIAC_PER_LOCALE[canonical][sign];
+  }
+  // Try base language
+  if (ZODIAC_PER_LOCALE[base]?.[sign]) {
+    return ZODIAC_PER_LOCALE[base][sign];
+  }
+
+  return [];
+}
+
 // Helper to check if a string is Latin-script (approximate)
 function isLatin(str: string): boolean {
   return /^[a-zA-Z\u00C0-\u00FF]+$/.test(str);

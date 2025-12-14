@@ -3,6 +3,7 @@ export {
   findAllZodiacInText,
   findFirstZodiacInText,
   getSupportedLocales,
+  getZodiacNames,
   getZodiacSign,
   type ZodiacMatch,
   type ZodiacMatcher,

@@ -1,5 +1,33 @@
 import { describe, expect, it } from "vitest";
-import { getZodiacSign, ZodiacSign } from "../src";
+import { getZodiacNames, getZodiacSign, ZodiacSign } from "../src";
+
+describe("getZodiacNames", () => {
+  it("should return names for a valid locale", () => {
+    const names = getZodiacNames(ZodiacSign.ARIES, "en");
+    expect(names).toContain("Aries");
+    expect(names).toContain("The Ram");
+  });
+
+  it("should return names for Chinese", () => {
+    const names = getZodiacNames(ZodiacSign.TAURUS, "zh");
+    expect(names).toContain("金牛座");
+  });
+
+  it("should handle locale fallback (zh-CN -> zh)", () => {
+    const names = getZodiacNames(ZodiacSign.GEMINI, "zh-CN");
+    expect(names).toContain("双子座");
+  });
+
+  it("should return symbols", () => {
+    const symbols = getZodiacNames(ZodiacSign.LEO, "symbols");
+    expect(symbols).toEqual(["♌"]);
+  });
+
+  it("should return empty array for unknown locale", () => {
+    const names = getZodiacNames(ZodiacSign.ARIES, "xx-YY");
+    expect(names).toEqual([]);
+  });
+});
 
 describe("New Languages Support", () => {
   it("should support Frisian (fy)", () => {

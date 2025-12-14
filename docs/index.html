@@ -34,42 +34,53 @@
 
         <main>
             <div class="glass-panel main-explorer">
-                <div class="tabs">
-                    <button class="tab-btn active" data-tab="name">🔍 By Name</button>
-                    <button class="tab-btn" data-tab="date">📅 By Date</button>
-                </div>
-
-                <div class="tab-content active" id="tab-name">
-                    <div class="input-wrapper">
-                        <label>Type any zodiac name (e.g. "Aries", "白羊", "♈")</label>
-                        <input type="text" id="text-input" class="cosmic-input" placeholder="Enter sign name...">
+                <div class="explorer-inputs">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="name">🔍 By Name</button>
+                        <button class="tab-btn" data-tab="date">📅 By Date</button>
                     </div>
-                </div>
 
-                <div class="tab-content" id="tab-date">
-                    <div class="input-wrapper">
-                        <label>Enter date (MM-DD) or pick from calendar</label>
-                        <div class="date-input-group">
-                            <input type="text" id="date-text-input" class="cosmic-input" placeholder="e.g. 03-21" maxlength="10">
-                            <button id="calendar-trigger" class="calendar-btn" title="Open Calendar">📅</button>
-                            <input type="date" id="date-picker" class="hidden-picker" title="Date Picker">
+                    <div class="tab-content active" id="tab-name">
+                        <div class="input-wrapper">
+                            <label>Type any zodiac name (e.g. "Aries", "白羊", "♈")</label>
+                            <div class="relative-input-container">
+                                <input type="text" id="text-input" class="cosmic-input" placeholder="Enter sign name...">
+                                <button class="clear-btn" id="clear-text" aria-label="Clear input">✕</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="tab-date">
+                        <div class="input-wrapper">
+                            <label>Enter date (MM-DD) or pick from calendar</label>
+                            <div class="date-input-group">
+                                <div class="relative-input-container">
+                                    <input type="text" id="date-text-input" class="cosmic-input" placeholder="e.g. 03-21" maxlength="10">
+                                    <button class="clear-btn" id="clear-date" aria-label="Clear input">✕</button>
+                                </div>
+                                <button id="calendar-trigger" class="calendar-btn" title="Open Calendar">📅</button>
+                                <input type="date" id="date-picker" class="hidden-picker" title="Date Picker">
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div id="result-display" class="result-display hidden">
-                    <div class="result-glow"></div>
-                    <div class="result-content">
-                        <div class="result-icon"></div>
-                        <h2 class="result-name"></h2>
-                        <div class="result-date"></div>
-                        <div class="result-meta"></div>
+                <div class="explorer-output">
+                    <div id="result-display" class="result-display hidden">
+                        <div class="result-glow"></div>
+                        <div class="result-content">
+                            <div class="result-icon"></div>
+                            <h2 class="result-name"></h2>
+                            <div class="result-date"></div>
+                            <br/>
+                            <div class="result-meta"></div>
+                        </div>
                     </div>
-                </div>
-                
-                <div id="empty-state" class="empty-state">
-                    <div class="constellation-bg"></div>
-                    <p>Select a date or enter a name to reveal the stars.</p>
+                    
+                    <div id="empty-state" class="empty-state">
+                        <div class="constellation-bg"></div>
+                        <p>Select a date or enter a name to reveal the stars.</p>
+                    </div>
                 </div>
             </div>
 
@@ -105,44 +116,46 @@
     </div>
 
     <script type="module">
-        import { findFirstZodiacInText, getZodiacDateRange, getZodiacSignFromDate, ZodiacSign } from 'https://cdn.jsdelivr.net/npm/zodiac-mapper/dist/index.min.mjs';
+        // Dynamic Import with Fallback Strategy
+        async function loadZodiacModule() {
+            const sources = [
+                'https://cdn.jsdelivr.net/npm/zodiac-mapper@latest/dist/index.min.mjs',
+                'https://esm.sh/zodiac-mapper'
+            ];
 
-        const zodiacInfo = {
-            [ZodiacSign.ARIES]: { emoji: "♈", name: "Aries", element: "Fire" },
-            [ZodiacSign.TAURUS]: { emoji: "♉", name: "Taurus", element: "Earth" },
-            [ZodiacSign.GEMINI]: { emoji: "♊", name: "Gemini", element: "Air" },
-            [ZodiacSign.CANCER]: { emoji: "♋", name: "Cancer", element: "Water" },
-            [ZodiacSign.LEO]: { emoji: "♌", name: "Leo", element: "Fire" },
-            [ZodiacSign.VIRGO]: { emoji: "♍", name: "Virgo", element: "Earth" },
-            [ZodiacSign.LIBRA]: { emoji: "♎", name: "Libra", element: "Air" },
-            [ZodiacSign.SCORPIO]: { emoji: "♏", name: "Scorpio", element: "Water" },
-            [ZodiacSign.SAGITTARIUS]: { emoji: "♐", name: "Sagittarius", element: "Fire" },
-            [ZodiacSign.CAPRICORN]: { emoji: "♑", name: "Capricorn", element: "Earth" },
-            [ZodiacSign.AQUARIUS]: { emoji: "♒", name: "Aquarius", element: "Air" },
-            [ZodiacSign.PISCES]: { emoji: "♓", name: "Pisces", element: "Water" },
-        };
+            for (const src of sources) {
+                try {
+                    const module = await import(src);
+                    console.log(`Loaded zodiac-mapper from: ${src}`);
+                    return module;
+                } catch (err) {
+                    console.warn(`Failed to load from ${src}:`, err);
+                }
+            }
+            throw new Error('Failed to load zodiac-mapper from all CDNs. Please check your internet connection.');
+        }
 
-        // Multilingual Data for Reference Table
-        const multilingualData = {
-            [ZodiacSign.ARIES]: { zh: "白羊座", hi: "मेष", es: "Aries", ar: "الحمل", fr: "Bélier", pt: "Áries", ru: "Овен" },
-            [ZodiacSign.TAURUS]: { zh: "金牛座", hi: "वृषभ", es: "Tauro", ar: "الثور", fr: "Taureau", pt: "Touro", ru: "Телец" },
-            [ZodiacSign.GEMINI]: { zh: "双子座", hi: "मिथुन", es: "Géminis", ar: "الجوزاء", fr: "Gémeaux", pt: "Gêmeos", ru: "Близнецы" },
-            [ZodiacSign.CANCER]: { zh: "巨蟹座", hi: "कर्क", es: "Cáncer", ar: "السرطان", fr: "Cancer", pt: "Câncer", ru: "Рак" },
-            [ZodiacSign.LEO]: { zh: "狮子座", hi: "सिंह", es: "Leo", ar: "الأسد", fr: "Lion", pt: "Leão", ru: "Лев" },
-            [ZodiacSign.VIRGO]: { zh: "处女座", hi: "कन्या", es: "Virgo", ar: "العذراء", fr: "Vierge", pt: "Virgem", ru: "Дева" },
-            [ZodiacSign.LIBRA]: { zh: "天秤座", hi: "तुला", es: "Libra", ar: "الميزان", fr: "Balance", pt: "Libra", ru: "Весы" },
-            [ZodiacSign.SCORPIO]: { zh: "天蝎座", hi: "वृश्चिक", es: "Escorpio", ar: "العقرب", fr: "Scorpion", pt: "Escorpião", ru: "Скорпион" },
-            [ZodiacSign.SAGITTARIUS]: { zh: "射手座", hi: "धनु", es: "Sagitario", ar: "القوس", fr: "Sagittaire", pt: "Sagitário", ru: "Стрелец" },
-            [ZodiacSign.CAPRICORN]: { zh: "摩羯座", hi: "मकर", es: "Capricornio", ar: "الجدي", fr: "Capricorne", pt: "Capricórnio", ru: "Козерог" },
-            [ZodiacSign.AQUARIUS]: { zh: "水瓶座", hi: "कुंभ", es: "Acuario", ar: "الدلو", fr: "Verseau", pt: "Aquário", ru: "Водолей" },
-            [ZodiacSign.PISCES]: { zh: "双鱼座", hi: "मीन", es: "Piscis", ar: "الحوت", fr: "Poissons", pt: "Peixes", ru: "Рыбы" },
-        };
+        let zodiacModule;
+        try {
+            zodiacModule = await loadZodiacModule();
+        } catch (error) {
+            document.querySelector('.app-container').innerHTML = `
+                <div style="text-align: center; padding: 4rem 2rem;">
+                    <h2 style="color: #ff6b6b; margin-bottom: 1rem; font-size: 2rem;">⚠️ Error</h2>
+                    <p style="font-size: 1.2rem; margin-bottom: 2rem;">${error.message}</p>
+                    <button onclick="location.reload()" class="tab-btn active" style="padding: 0.8rem 2rem;">Retry Connection</button>
+                </div>
+            `;
+            throw error;
+        }
+
+        const { findFirstZodiacInText, getZodiacDateRange, getZodiacNames, getZodiacSignFromDate, ZodiacSign } = zodiacModule;
 
         function formatDateRange(range) {
-            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            const start = `${months[range.start.month - 1]} ${range.start.day}`;
-            const end = `${months[range.end.month - 1]} ${range.end.day}`;
-            return `${start} - ${end}`;
+            const pad = (n) => n.toString().padStart(2, '0');
+            const start = `${pad(range.start.month)}-${pad(range.start.day)}`;
+            const end = `${pad(range.end.month)}-${pad(range.end.day)}`;
+            return `${start} ~ ${end}`;
         }
 
         // Tab Switching
@@ -157,7 +170,8 @@
                 document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
                 
                 // Clear inputs when switching
-                document.getElementById('date-input').value = '';
+                document.getElementById('date-text-input').value = '';
+                document.getElementById('date-picker').value = '';
                 document.getElementById('text-input').value = '';
                 hideResult();
             });
@@ -168,22 +182,37 @@
         const emptyState = document.getElementById('empty-state');
 
         function showResult(sign, metaText = '') {
-            const info = zodiacInfo[sign];
+            const emoji = getZodiacNames(sign, 'symbols')[0] || '';
+            const name = getZodiacNames(sign, 'en')[0] || sign;
             const range = getZodiacDateRange(sign);
             
-            resultDisplay.querySelector('.result-icon').textContent = info.emoji;
-            resultDisplay.querySelector('.result-name').textContent = info.name;
+            resultDisplay.querySelector('.result-icon').textContent = emoji;
+            resultDisplay.querySelector('.result-name').textContent = name;
             resultDisplay.querySelector('.result-date').textContent = formatDateRange(range);
-            resultDisplay.querySelector('.result-meta').textContent = metaText || info.element;
             
-            // Set color theme based on element
-            resultDisplay.setAttribute('data-element', info.element.toLowerCase());
+            const metaEl = resultDisplay.querySelector('.result-meta');
+            if (metaText) {
+                metaEl.textContent = metaText;
+            } else {
+                metaEl.style.display = 'none';
+            }
+            
+            resultDisplay.removeAttribute('data-element');
+
+            // Highlight Table Row
+            document.querySelectorAll('.highlight-row').forEach(el => { el.classList.remove('highlight-row'); });
+            const row = document.getElementById(`row-${sign}`);
+            if (row) {
+                row.classList.add('highlight-row');
+                // row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
 
             resultDisplay.classList.remove('hidden');
             emptyState.classList.add('hidden');
         }
 
         function hideResult() {
+            document.querySelectorAll('.highlight-row').forEach(el => { el.classList.remove('highlight-row'); });
             resultDisplay.classList.add('hidden');
             emptyState.classList.remove('hidden');
         }
@@ -257,25 +286,40 @@
         // Table Population
         const tableBody = document.querySelector('#zodiac-table tbody');
         Object.values(ZodiacSign).forEach(sign => {
-            const info = zodiacInfo[sign];
-            const multi = multilingualData[sign];
+            const emoji = getZodiacNames(sign, 'symbols')[0] || '';
+            const name = getZodiacNames(sign, 'en')[0] || sign;
             const range = getZodiacDateRange(sign);
             
             const row = document.createElement('tr');
+            row.id = `row-${sign}`;
             row.innerHTML = `
-                <td class="col-sign"><span class="table-icon">${info.emoji}</span></td>
+                <td class="col-sign"><span class="table-icon">${emoji}</span></td>
                 <td class="col-date">${formatDateRange(range)}</td>
-                <td class="col-lang">${info.name}</td>
-                <td class="col-lang">${multi.zh}</td>
-                <td class="col-lang">${multi.hi}</td>
-                <td class="col-lang">${multi.es}</td>
-                <td class="col-lang">${multi.ar}</td>
-                <td class="col-lang">${multi.fr}</td>
-                <td class="col-lang">${multi.pt}</td>
-                <td class="col-lang">${multi.ru}</td>
+                <td class="col-lang">${name}</td>
+                <td class="col-lang">${getZodiacNames(sign, 'zh')[0] || '-'}</td>
+                <td class="col-lang">${getZodiacNames(sign, 'hi')[0] || '-'}</td>
+                <td class="col-lang">${getZodiacNames(sign, 'es')[0] || '-'}</td>
+                <td class="col-lang">${getZodiacNames(sign, 'ar')[0] || '-'}</td>
+                <td class="col-lang">${getZodiacNames(sign, 'fr')[0] || '-'}</td>
+                <td class="col-lang">${getZodiacNames(sign, 'pt')[0] || '-'}</td>
+                <td class="col-lang">${getZodiacNames(sign, 'ru')[0] || '-'}</td>
             `;
             
             tableBody.appendChild(row);
+        });
+
+        // Clear Buttons Logic
+        document.getElementById('clear-text').addEventListener('click', () => {
+            document.getElementById('text-input').value = '';
+            hideResult();
+            document.getElementById('text-input').focus();
+        });
+
+        document.getElementById('clear-date').addEventListener('click', () => {
+            document.getElementById('date-text-input').value = '';
+            document.getElementById('date-picker').value = '';
+            hideResult();
+            document.getElementById('date-text-input').focus();
         });
     </script>
 </body>

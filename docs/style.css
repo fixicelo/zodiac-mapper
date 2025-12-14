@@ -151,6 +151,41 @@ h1 {
   animation: fadeIn 1s ease-out;
 }
 
+/* Main Explorer Layout */
+.main-explorer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .main-explorer {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .explorer-inputs {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .explorer-output {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .result-display,
+  .empty-state {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
 /* Tabs */
 .tabs {
   display: flex;
@@ -199,16 +234,55 @@ h1 {
   color: var(--text);
 }
 
+.relative-input-container {
+  position: relative;
+  width: 100%;
+  flex: 1;
+}
+
 .cosmic-input {
   width: 100%;
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid var(--glass-border);
   padding: 1rem;
+  padding-right: 2.5rem; /* Space for clear button */
   border-radius: 0.75rem;
   color: white;
   font-size: 1.2rem;
   font-family: inherit;
   transition: all 0.3s;
+}
+
+.clear-btn {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 0.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  transition: all 0.2s;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cosmic-input:not(:placeholder-shown) + .clear-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.clear-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
 }
 
 .cosmic-input:focus {
@@ -245,9 +319,20 @@ h1 {
 }
 
 .result-date {
-  color: var(--text-muted);
+  color: var(--accent);
+  font-family: "Outfit", sans-serif;
   font-size: 1.1rem;
-  margin-bottom: 1rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.5rem;
+  padding: 0.4rem 1.2rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2rem;
+  display: inline-block;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .result-meta {
@@ -258,39 +343,6 @@ h1 {
   text-transform: uppercase;
   letter-spacing: 1px;
   background: rgba(255, 255, 255, 0.1);
-}
-
-/* Element Themes */
-[data-element="fire"] .result-name {
-  color: var(--fire);
-}
-[data-element="fire"] .result-meta {
-  border: 1px solid var(--fire);
-  color: var(--fire);
-}
-
-[data-element="water"] .result-name {
-  color: var(--water);
-}
-[data-element="water"] .result-meta {
-  border: 1px solid var(--water);
-  color: var(--water);
-}
-
-[data-element="earth"] .result-name {
-  color: var(--earth);
-}
-[data-element="earth"] .result-meta {
-  border: 1px solid var(--earth);
-  color: var(--earth);
-}
-
-[data-element="air"] .result-name {
-  color: var(--air);
-}
-[data-element="air"] .result-meta {
-  border: 1px solid var(--air);
-  color: var(--air);
 }
 
 /* Empty State */
@@ -452,8 +504,7 @@ footer a {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  font-family:
-    "Outfit", sans-serif;
+  font-family: "Outfit", sans-serif;
   background: rgba(15, 23, 42, 0.95);
   position: sticky;
   top: 0;
@@ -480,6 +531,38 @@ footer a {
   color: var(--text);
 }
 
+.zodiac-table tr.highlight-row td {
+  background: rgba(129, 140, 248, 0.15);
+  color: white;
+  border-top: 1px solid rgba(129, 140, 248, 0.5);
+  border-bottom: 1px solid rgba(129, 140, 248, 0.5);
+  box-shadow: inset 0 0 20px rgba(129, 140, 248, 0.05);
+}
+
+.col-date {
+  color: var(--accent);
+  font-weight: 600;
+  white-space: nowrap;
+  font-family: "Outfit", sans-serif;
+}
+
+.zodiac-table tr.highlight-row td:first-child {
+  border-left: 1px solid rgba(129, 140, 248, 0.5);
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+
+.zodiac-table tr.highlight-row td:last-child {
+  border-right: 1px solid rgba(129, 140, 248, 0.5);
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
+
+.zodiac-table tr.highlight-row .col-date {
+  color: #c7d2fe;
+  text-shadow: 0 0 12px rgba(129, 140, 248, 0.6);
+}
+
 .table-icon {
   font-size: 1.75rem;
   filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
@@ -489,13 +572,6 @@ footer a {
   width: 80px;
   text-align: center;
   padding-left: 1rem;
-}
-
-.col-date {
-  color: var(--accent);
-  font-weight: 600;
-  white-space: nowrap;
-  font-family: "Outfit", sans-serif;
 }
 
 .col-lang {

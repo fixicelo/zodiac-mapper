@@ -1692,14 +1692,14 @@ export const ZODIAC_PER_LOCALE: Record<string, ZodiacLocaleData> = {
   // Punjabi
   pa: {
     [ZodiacSign.ARIES]: ["ਮੇਖ", "Mesh", "Megha", "Mekh"],
-    [ZodiacSign.TAURUS]: ["વૃષ", "Vrish", "Vrishabha", "Brikh"],
+    [ZodiacSign.TAURUS]: ["ਬ੍ਰਿਸ਼ਭ", "Vrish", "Vrishabha", "Brikh"],
     [ZodiacSign.GEMINI]: ["ਮਿਥੁਨ", "Mithun"],
     [ZodiacSign.CANCER]: ["ਕਰਕ", "Kark", "Karak"],
     [ZodiacSign.LEO]: ["ਸਿੰਘ", "Singh"],
     [ZodiacSign.VIRGO]: ["ਕੰਨਿਆ", "Kanya"],
     [ZodiacSign.LIBRA]: ["ਤੁਲਾ", "Tula"],
-    [ZodiacSign.SCORPIO]: ["ਵ੍ਰਿਸ਼ਚਿਕ", "Vrishchik", "Brischak"],
-    [ZodiacSign.SAGITTARIUS]: ["ਧਨੁ", "Dhanu", "Dhan"],
+    [ZodiacSign.SCORPIO]: ["ਬ੍ਰਿਸ਼ਚਕ", "Vrishchik", "Brischak"],
+    [ZodiacSign.SAGITTARIUS]: ["ਧਨੂੰ", "Dhanu", "Dhan"],
     [ZodiacSign.CAPRICORN]: ["ਮਕਰ", "Makar"],
     [ZodiacSign.AQUARIUS]: ["ਕੁੰਭ", "Kumbh"],
     [ZodiacSign.PISCES]: ["ਮੀਨ", "Meen", "Min"],

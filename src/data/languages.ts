@@ -394,7 +394,7 @@ export const ZODIAC_PER_LOCALE: Record<string, ZodiacLocaleData> = {
     [ZodiacSign.VIRGO]: ["Virgo"],
     [ZodiacSign.LIBRA]: ["Libra"],
     [ZodiacSign.SCORPIO]: ["Scorpio"],
-    [ZodiacSign.SAGITTARIUS]: ["Sagitarius"],
+    [ZodiacSign.SAGITTARIUS]: ["Sagittarius"],
     [ZodiacSign.CAPRICORN]: ["Capricorn"],
     [ZodiacSign.AQUARIUS]: ["Aquarius"],
     [ZodiacSign.PISCES]: ["Pisces"],
